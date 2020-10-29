@@ -25,44 +25,49 @@ function preload() {
 function setup() {
   // Create Canvas
   let cnv = createCanvas(windowWidth, windowHeight);
+  // Variable settings
   colorMode(RGB);
   angleMode(DEGREES);
   // Create Play Button
   playButton = createButton("Play");
   playButton.position((windowWidth / 100) * 5, (windowHeight / 100) * 95);
   playButton.mousePressed(togglePlayButton);
-
+  // Create Toggle Image Button
   imgButton = createButton("Toggle Image");
   imgButton.position(
     (windowWidth / 100) * 95 - imgButton.width,
     (windowHeight / 100) * 95
   );
   imgButton.mousePressed(toggleImage);
-
+  // Create Mic Button
   mic = new p5.AudioIn();
-  micCheckbox = createCheckbox("Mic Input", false);
+  micCheckbox = createCheckbox("", false);
   micCheckbox.changed(toggleMic);
   micCheckbox.position((windowWidth / 100) * 50, windowHeight * 0.95);
-
+  // Total Sound Amplitude for background color change
   totalAmp = new p5.Amplitude();
 
   barCount = 256;
-  fft = new p5.FFT(0.7, barCount);
+  fft = new p5.FFT(0.7, barCount); // (smoothing, number of divisions for frequencies)
   mic.connect(fft);
   mic.connect(totalAmp);
   barWidth = windowWidth / barCount;
 }
 
 function draw() {
+  // FFT vis
   drawSpectrum();
+  // Waveform vis
   drawWaveform();
+  // Init image
   if (!currentImg) {
     image(lemonadeImg, -lemonadeImg.width / 2, -lemonadeImg.height / 2);
   } else {
     image(currentImg, -currentImg.width / 2, -currentImg.height / 2);
   }
-
+  // Background circle for image
   circle(0, 0, 200);
+  // Looping music title
   drawText();
 }
 
@@ -71,6 +76,7 @@ function drawSpectrum() {
   // Initialize
   let spectrum = fft.analyze();
   translate(windowWidth / 2, windowHeight / 2);
+
   // Background
   let sumAmp = 0;
   for (let i = 0; i < spectrum.length; i++) {
@@ -79,6 +85,7 @@ function drawSpectrum() {
   }
   let avgAmp = sumAmp / spectrum.length;
   bgColor = map(avgAmp, 0, 255, 0, 50);
+  // Map amplitude to background color change
   if (micStatus === true && totalAmp.getLevel() < 0.12) {
     background(0);
   } else {
@@ -98,8 +105,7 @@ function drawSpectrum() {
     let r = map(amplitude, 0, 256, 90, (smallestWinDim / 2) * 0.9);
     let x = r * cos(angle + frameCount / 2);
     let y = r * sin(angle + frameCount / 2);
-    // rotate(PI / 4.25);
-    stroke(amplitude + i, amplitude, i);
+    stroke(amplitude + i, amplitude, i); // Color of spectrum
     strokeWeight(5);
     if (micStatus === true && totalAmp.getLevel() < 0.12) {
       strokeWeight(1);
@@ -107,10 +113,6 @@ function drawSpectrum() {
       strokeWeight(5);
     }
     line(0, 0, x, y);
-
-    // let lineHeight = map(amplitude, 0, 256, windowHeight, windowHeight / 2);
-    // fill(i, 255, 255);
-    // rect(i * barWidth, lineHeight, barWidth - 2, windowHeight - lineHeight);
   }
   fill(255, 255, 255);
   noStroke();
@@ -136,6 +138,7 @@ function drawWaveform() {
 }
 
 function drawText() {
+  // Looping music title
   fill(255, 255, 255);
   noStroke();
   if (music.isPlaying()) {
@@ -151,20 +154,23 @@ function drawText() {
     );
   }
   textAlign(CENTER, CENTER);
+
+  // Blend rectangles that hide the looping text with the background color change
   rectMode(CENTER);
   if (micStatus === true && totalAmp.getLevel() < 0.01) {
     fill(0);
   } else {
     fill(bgColor);
   }
-  // fill(bgColor);
+
+  // Rectangles that hide the looping music title
   if (micStatus === false) {
     rect(-220, (-windowHeight / 2) * 0.95, 240, 50);
     rect(220, (-windowHeight / 2) * 0.95, 240, 50);
   }
 }
 
-// Play/Pause Functionality for play button
+// Play/Pause button
 function togglePlayButton() {
   if (!music.isPlaying()) {
     music.play();
@@ -175,17 +181,14 @@ function togglePlayButton() {
   }
 }
 
+// Toggle image button
 let counter = 1;
 function toggleImage() {
-  // if (currentImg === lemonadeImg || !currentImg) {
-  //   currentImg = headshotImg;
-  // } else {
-  //   currentImg = lemonadeImg;
-  // }
   currentImg = imageArr[(counter + imageArr.length) % imageArr.length];
   counter++;
 }
 
+// Mic toggle button
 function toggleMic() {
   if (this.checked()) {
     music.stop();
@@ -195,7 +198,6 @@ function toggleMic() {
     micStatus = true;
   } else {
     mic.stop();
-    //music.play();
     currentImg = lemonadeImg;
     angleScale = 525;
     micStatus = false;
