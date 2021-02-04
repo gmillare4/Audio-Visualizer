@@ -7,10 +7,10 @@ let totalAmp;
 let barCount;
 let barWidth;
 let bgColor;
+let checkBox = [];
 // Images
 let lemonadeImg;
 let headshotImg;
-let ggLogo;
 let imageArr = [];
 let currentImg = lemonadeImg;
 
@@ -18,8 +18,7 @@ function preload() {
   music = loadSound("assets/S U B W A Y S - アイスクリーム.mp3");
   lemonadeImg = loadImage("assets/cropped pink lemonade.png");
   headshotImg = loadImage("assets/audiovis headshot (1).png");
-  ggLogo = loadImage("assets/GG Logo.png");
-  imageArr.push(lemonadeImg, headshotImg, ggLogo);
+  imageArr.push(lemonadeImg, headshotImg);
 }
 
 function setup() {
@@ -28,6 +27,12 @@ function setup() {
   // Variable settings
   colorMode(RGB);
   angleMode(DEGREES);
+  // Create Mic Button
+  mic = new p5.AudioIn();
+  micCheckbox = createCheckbox("", false);
+  micCheckbox.changed(toggleMic);
+  micCheckbox.position((windowWidth / 100) * 50, windowHeight * 0.95);
+  checkBox.push(micCheckbox);
   // Create Play Button
   playButton = createButton("Play");
   playButton.position((windowWidth / 100) * 5, (windowHeight / 100) * 95);
@@ -39,11 +44,7 @@ function setup() {
     (windowHeight / 100) * 95
   );
   imgButton.mousePressed(toggleImage);
-  // Create Mic Button
-  mic = new p5.AudioIn();
-  micCheckbox = createCheckbox("", false);
-  micCheckbox.changed(toggleMic);
-  micCheckbox.position((windowWidth / 100) * 50, windowHeight * 0.95);
+
   // Total Sound Amplitude for background color change
   totalAmp = new p5.Amplitude();
 
@@ -85,6 +86,7 @@ function drawSpectrum() {
   }
   let avgAmp = sumAmp / spectrum.length;
   bgColor = map(avgAmp, 0, 255, 0, 50);
+  console.log("total Amp", totalAmp.getLevel());
   // Map amplitude to background color change
   if (micStatus === true && totalAmp.getLevel() < 0.12) {
     background(0);
@@ -107,7 +109,7 @@ function drawSpectrum() {
     let y = r * sin(angle + frameCount / 2);
     stroke(amplitude + i, amplitude, i); // Color of spectrum
     strokeWeight(5);
-    if (micStatus === true && totalAmp.getLevel() < 0.12) {
+    if (micStatus === true && totalAmp.getLevel() < 0.01) {
       strokeWeight(1);
     } else {
       strokeWeight(5);
@@ -175,10 +177,19 @@ function togglePlayButton() {
   if (!music.isPlaying()) {
     music.play();
     playButton.html("Pause");
+    mic.stop();
+    currentImg = lemonadeImg;
+    angleScale = 525;
+    micStatus = false;
+    changeCheckbox(checkBox);
   } else {
     music.pause();
     playButton.html("Play");
   }
+}
+
+function changeCheckbox(checkBox) {
+  checkBox[0].checked(false);
 }
 
 // Toggle image button
@@ -191,7 +202,9 @@ function toggleImage() {
 // Mic toggle button
 function toggleMic() {
   if (this.checked()) {
-    music.stop();
+    //music.stop();
+    music.pause();
+    playButton.html("Play");
     mic.start();
     currentImg = headshotImg;
     angleScale = 360;
