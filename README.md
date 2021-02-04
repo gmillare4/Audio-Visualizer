@@ -1,34 +1,26 @@
-![Game of Life in 3D](public/GameOfLife3d.PNG)
+![Audio Visualizer](assets/AudioVis.PNG)
 
-This project is a recreation of John Conway's famous cellular automaton ruleset, the Game of Life, in 2D and 3D. On the left is a standard 2D visualization of the Game of Life and on the right is a 3D visualization in which the top most layer is the most recent generation reflected on the left and the lower layers are comprised of previous generations of cells stacked on top of each other.
+This project is an audio visualizer that has two modes:
 
-Here's a "Fun" video describing the motivations behind the project as well as a demonstration and overview of the mechanics:
-https://www.youtube.com/watch?v=9w_ILpm1P0g&feature=youtu.be
+1. The first mode visualizes a preloaded track
+2. The second mode visualizes microphone input (may not work on all browsers)
 
-The main technologies used in this project are:
-![React Logo](https://miro.medium.com/max/3600/1*HSisLuifMO6KbLfPOKtLow.jpeg)
+It does this by using the amplitude of different frequencies of a given sound to create the moving bars in addition to the waveform that rotates around the center of the canvas.
 
-React is used to render the standard Game of Life in 2D along with the button interface and the ability to click and alter an individual cell's state.
+This project was built using:
+![p5.js Logo](https://happycoding.io/tutorials/p5js/images/hello-world-3.png)
 
-![Redux Logo](https://daqxzxzy8xq3u.cloudfront.net/wp-content/uploads/2019/04/21032431/redux-cover-imgage-1024x768.jpg)
-
-Redux is used as state management to store the state of each individual cell, whether they are dead or alive.
-
-![Three.js Logo](https://ucarecdn.com/22a0a69b-689f-46c9-866b-57650f31fde9/)
-
-Three.js is used to render the Game of Life in 3D.
-
-To deploy locally:
-
-1. npm install
-2. npm run start-server
-3. open locally on port 5500
+p5.js is used to easily draw on a canvas while the p5.js sound library was used to incorporate audio and microphone functionality.
 
 Functionality:
 
-- Play button starts simulation
-- Pause button pauses simulation
-- Clear button clears simulation
-- Random button clears simulation and initializes a random first generation of cells
-- Click on cells to alter whether they are dead or alive (First generation)
-- Camera controls by clicking and dragging the mouse to rotate the 3D grid and using the mousewheel to zoom in/out
+- Play/Pause button starts and stops the music + visualization
+- Checkbox toggles microphone input + visualization (may not work on all browsers)
+- Toggle Image button toggles the center image used
+- Visualization
+  - Audio waveform
+  - Bars represent a frequency range of the sound
+    - Size is determined by amplitude
+    - Color is determined by both amplitude and frequency
+  - Background brightness is determined by average amplitude
+- Song title looping animation
