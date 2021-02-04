@@ -18,7 +18,7 @@ p5.js is used to easily draw on a canvas while the p5.js sound library was used 
 
 GitHub Pages is used to deploy this website
 
-Functionality:
+Features:
 
 - Play/Pause button starts and stops the music + visualization
 - Checkbox toggles microphone input + visualization (may not work on all browsers)
