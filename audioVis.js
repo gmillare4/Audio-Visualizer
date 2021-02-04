@@ -86,9 +86,9 @@ function drawSpectrum() {
   }
   let avgAmp = sumAmp / spectrum.length;
   bgColor = map(avgAmp, 0, 255, 0, 50);
-  console.log("total Amp", totalAmp.getLevel());
+
   // Map amplitude to background color change
-  if (micStatus === true && totalAmp.getLevel() < 0.12) {
+  if (micStatus === true && bgColor < 5) {
     background(0);
   } else {
     background(bgColor);
@@ -109,7 +109,7 @@ function drawSpectrum() {
     let y = r * sin(angle + frameCount / 2);
     stroke(amplitude + i, amplitude, i); // Color of spectrum
     strokeWeight(5);
-    if (micStatus === true && totalAmp.getLevel() < 0.01) {
+    if (micStatus === true && bgColor < 5) {
       strokeWeight(1);
     } else {
       strokeWeight(5);
