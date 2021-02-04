@@ -37,7 +37,9 @@ function setup() {
   playButton = createButton("Play");
   playButton.position((windowWidth / 100) * 5, (windowHeight / 100) * 95);
   playButton.mousePressed(togglePlayButton);
-  togglePlayButton();
+  if (music) {
+    togglePlayButton();
+  }
   // Create Toggle Image Button
   imgButton = createButton("Toggle Image");
   imgButton.position(
