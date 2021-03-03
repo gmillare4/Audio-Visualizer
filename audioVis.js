@@ -77,6 +77,7 @@ function drawSpectrum() {
   // Initialize
   let spectrum = fft.analyze();
   translate(windowWidth / 2, windowHeight / 2);
+  console.log(spectrum);
 
   // Background
   let sumAmp = 0;

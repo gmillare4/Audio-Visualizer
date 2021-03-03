@@ -9,6 +9,8 @@ This project is an audio visualizer that has two modes:
 
 It does this by using the amplitude of different frequencies of a given sound to create the moving bars in addition to the waveform that rotates around the center of the canvas.
 
+Here's a "Fun" video describing the motivations behind the project as well as a demonstration and overview of the mechanics: https://www.youtube.com/watch?v=i9mR9Z-Snlc&feature=youtu.be
+
 This project was built using:
 ![p5.js Logo](https://happycoding.io/tutorials/p5js/images/hello-world-3.png)
 
